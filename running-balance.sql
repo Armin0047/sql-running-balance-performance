@@ -1,9 +1,3 @@
-```markdown
-### 💻 The Core Implementation
-
-Using the `SUM() OVER()` function with a specific frame to ensure accuracy and speed:
-
-```sql
 Select No_Sanad,Code_Kol,Code_Moe,Code_Taf,Bed_Sanad as Debit ,Bes_Sanad as Credit,
 
     SUM(Bed_Sanad) OVER (ORDER BY No_Sanad, ID ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS TotalDebit,
