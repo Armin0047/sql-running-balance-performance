@@ -1,25 +1,64 @@
 # High-Performance Running Balance in T-SQL
 
-This project demonstrates an optimized approach to calculating daily financial balances (Running Totals) using modern SQL Window Functions vs. legacy methods.
+This repository demonstrates a deterministic and efficient approach to calculating running balances in SQL Server using `SUM() OVER()` and window frames.
 
-## 🚀 The Challenge
-In financial systems, calculating a continuous balance (Running Total) while handling:
-1. **High Volume Data:** Ensuring performance over millions of rows.
-2. **Deterministic Results:** Handling multiple transactions within the same millisecond (Same-time entries).
+## Overview
 
-## 💡 The Solution
-Instead of using slow Cursors or expensive Self-Joins, this implementation uses `SUM() OVER()` with a specific window frame:
-- **`ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`**: This ensures the calculation stays within the set-based engine's optimal path.
-- **Deterministic Sorting**: By combining `No_Sanad` and `ID`, we guarantee a consistent order even for simultaneous transactions.
+In financial systems, running balance calculations must be both **accurate** and **deterministic**, especially when multiple transactions share the same timestamp or document number.
 
-## 📊 Performance Benefit
-- **Set-based (Window Functions):** O(n) complexity.
-- **Legacy (Cursor/Loop):** O(n²) or worse in terms of RBAR (Row By Agonizing Row).
+This project shows how to solve that problem without cursors, loops, or self-joins.
 
-## How to use
-Run `schema.sql` to create the environment, then execute `running_total.sql` to see the results.
+## Problem Statement
 
+Traditional RBAR approaches such as cursors or row-by-row loops are slow and do not scale well.
 
-<p align="center">
-  <img src="RunningTotal_total.jpg" alt="SQL Result Preview" width="600">
-</p>
+The challenge becomes more subtle when:
+- multiple rows have the same `No_Sanad`
+- ordering must remain stable
+- balance calculation must remain reproducible
+
+## Solution
+
+The query uses:
+
+- `SUM(...) OVER (...)` for set-based aggregation
+- `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` for precise running accumulation
+- `ORDER BY No_Sanad, ID` to guarantee deterministic ordering
+
+## Key Technical Decisions
+
+### 1. Deterministic Sorting
+Using `No_Sanad` alone is not enough when duplicate values exist.  
+Adding `ID` ensures that row order is stable and predictable.
+
+### 2. ROWS vs RANGE
+`ROWS` calculates the running balance row by row.  
+`RANGE` can group peer rows with the same sort key, which may produce incorrect results in this scenario.
+
+### 3. Set-Based Processing
+This approach leverages SQL Server's optimized execution engine and avoids RBAR patterns.
+
+## Files
+
+- `Query.sql` — Main query implementation
+- `README.md` — Documentation
+- `RunningTotal_total.jpg` — Screenshot of the result
+
+## Usage
+
+1. Create the sample table and data.
+2. Run `Query.sql`.
+3. Compare the output with the screenshot.
+
+## Result
+
+![Running Balance Result](RunningTotal_total.jpg)
+
+## Notes
+
+This project focuses on correctness and readability first.  
+A future enhancement could include performance benchmarking on larger datasets.
+
+## Author
+
+Armin
