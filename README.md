@@ -40,14 +40,14 @@ This approach leverages SQL Server's optimized execution engine and avoids RBAR 
 
 ## Files
 
-- `Query.sql` — Main query implementation
+- `running-balance.sql` — Main query implementation
 - `README.md` — Documentation
 - `RunningTotal_total.jpg` — Screenshot of the result
 
 ## Usage
 
 1. Create the sample table and data.
-2. Run `Query.sql`.
+2. Run `running-balance.sql`.
 3. Compare the output with the screenshot.
 
 ## Result
