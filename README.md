@@ -20,3 +20,6 @@ Instead of using slow Cursors or expensive Self-Joins, this implementation uses 
 Run `schema.sql` to create the environment, then execute `running_total.sql` to see the results.
 
 
+<p align="center">
+  <img src="RunningTotal_total.jpg" alt="SQL Result Preview" width="600">
+</p>
